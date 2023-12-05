@@ -1,0 +1,21 @@
+<!-- livebook:{"file_entries":[{"file":{"file_system_id":"local","file_system_type":"local","path":"/data/inputs/day1.txt"},"name":"day1.txt","type":"file"}]} -->
+
+# Day 1
+
+## Part 1
+
+```elixir
+File.read!("/data/inputs/day1.txt")
+|> String.split()
+|> Enum.map(fn str ->
+  str
+  |> String.codepoints()
+  |> Enum.filter(fn l -> Regex.match?(~r/^\d+$/, l) end)
+  |> (&[List.first(&1), List.last(&1)]).()
+  |> Enum.join()
+  |> String.to_integer()
+end)
+|> Enum.sum()
+```
+
+<!-- livebook:{"offset":466,"stamp":{"token":"XCP.n5Uf_LC7nFHeA2UDSi5rDNZJjYzl4EdZi4zQ2cYX88hGtBQLdZxbIaVNYviDuTEIm2ExVAqfRzRpvn0Ew_pNEu_vTRhOYYjbDMDA5A","version":2}} -->

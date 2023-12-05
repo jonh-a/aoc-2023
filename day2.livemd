@@ -1,0 +1,79 @@
+<!-- livebook:{"file_entries":[{"file":{"file_system_id":"local","file_system_type":"local","path":"/data/inputs/day2.txt"},"name":"day2.txt","type":"file"}]} -->
+
+# Day 2
+
+## Part 1
+
+```elixir
+defmodule Day2 do
+  defp parse_game(game) do
+    [id_string, game_data] =
+      game
+      |> String.split(":")
+
+    id =
+      id_string
+      |> String.split(" ")
+      |> List.last()
+      |> String.to_integer()
+
+    iterations =
+      game_data
+      |> String.split(";")
+
+    rolls =
+      iterations
+      |> Enum.map(&String.split(&1, ","))
+
+    %{id: id, rolls: rolls}
+  end
+
+  defp valid_roll?(roll) do
+    IO.inspect(roll)
+    [num, color] = roll |> String.trim() |> String.split()
+
+    cond do
+      color == "red" and num |> String.to_integer() > 12 -> false
+      color == "green" and num |> String.to_integer() > 13 -> false
+      color == "blue" and num |> String.to_integer() > 14 -> false
+      true -> true
+    end
+  end
+
+  def valid_game?(game) do
+    game
+    |> Map.get(:rolls)
+    |> Enum.map(fn x ->
+      Enum.map(x, fn y -> valid_roll?(y) end)
+    end)
+    |> List.flatten()
+    |> Enum.member?(false)
+    |> Kernel.!()
+  end
+
+  defp evaluate_game([], score), do: score
+
+  defp evaluate_game([head | tail], score) do
+    game_valid = valid_game?(head)
+
+    case game_valid do
+      false -> evaluate_game(tail, score)
+      true -> evaluate_game(tail, score + Map.get(head, :id))
+    end
+  end
+
+  def part1 do
+    File.read!("/data/inputs/day2.txt")
+    |> String.split("\n")
+    |> Enum.map(fn game ->
+      game
+      |> parse_game()
+    end)
+    |> evaluate_game(0)
+  end
+end
+
+Day2.part1()
+```
+
+<!-- livebook:{"offset":1616,"stamp":{"token":"XCP.ybRREprUXb38RSLwefAXsmZaxOCNhn3Fc7FlQIRnpY8XxCIcXmsaJhwAM75DAFm_S0QU-lttAAkcPPh85p3wlviHDBQ3HFZVBIratxsWsxclNZidWReLdUVROCCiXQ","version":2}} -->
