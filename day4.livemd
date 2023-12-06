@@ -8,27 +8,26 @@
 File.read!("/data/inputs/day4.txt")
 |> String.split("\n")
 |> Enum.map(fn line ->
-  [win, draw] =
-    line
-    |> String.split(":", trim: true)
-    |> List.last()
-    |> String.trim()
-    |> String.split(" ")
-    |> Enum.filter(&(&1 != ""))
-    |> Enum.chunk_by(&(&1 == "|"))
-    |> Enum.filter(&(length(&1) > 1))
-
-  Enum.frequencies(win ++ draw)
+  line
+  |> String.split(":", trim: true)
+  |> List.last()
+  |> String.trim()
+  |> String.split(" ")
+  |> Enum.filter(&(&1 != ""))
+  |> Enum.chunk_by(&(&1 == "|"))
+  |> Enum.filter(&(length(&1) > 1))
+  |> List.flatten()
+  |> Enum.frequencies()
   |> Map.filter(fn {_key, value} -> value > 1 end)
   |> Map.keys()
 end)
 |> Enum.map(fn x ->
   case length(x) do
     0 -> 0
-    _ -> Integer.pow(2, length(x) - 1)
+    y -> Integer.pow(2, y - 1)
   end
 end)
 |> Enum.sum()
 ```
 
-<!-- livebook:{"offset":731,"stamp":{"token":"XCP.AUDE9C0aGnLn4pn6SRsSWfpwoZVEtlXeW20uFpyTIPu0P_4yib3uQM3TBJ3zcD0go_XUZdjUwjAxq9bcAeiIPBrsiUUICo6hBvLuKFnj91ZXEVw8mebh179TNETHoQ","version":2}} -->
+<!-- livebook:{"offset":702,"stamp":{"token":"XCP.DdIxJ59N-0cwv1erFn8aBX6ZbDA6_RQlE6JdWQR0L-IT8PTczGth7MdyDOvy_hfrfvQWizoNGgtLGqUv0N-PYZ-mUOMnRj0zPEN3aUdb4x_dKqX_dh-qWeFMKikYdQ","version":2}} -->
